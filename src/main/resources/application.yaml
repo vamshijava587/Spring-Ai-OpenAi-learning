@@ -1,0 +1,24 @@
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+    observability:
+      enabled: true
+server:
+  port: 8081
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    enabled: true
+
+logging:
+  level:
+    io.micrometer: DEBUG
+    org.springframework.web.client: DEBUG
+    org.springframework.web.reactive.function.client: DEBUG
