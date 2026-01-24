@@ -1,5 +1,6 @@
 package com.vamshi.springopenai.controller;
 
+import com.vamshi.springopenai.common.ModelType;
 import com.vamshi.springopenai.model.ChatRequest;
 import com.vamshi.springopenai.service.MultiModelChatModel;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public class MultiModelController {
     }
 
     @PostMapping("/chat/{model}")
-    public String multiModel(@RequestBody ChatRequest chatRequest ,@RequestHeader String chatModel){
-        return multiModelChatModel.chat(chatRequest.getMessage(),chatModel);
+    public String multiModel(@RequestHeader("X-Chat-Model") ModelType model, @RequestBody ChatRequest chatRequest) {
+        return multiModelChatModel.chat(chatRequest.getMessage(), model);
     }
 }

@@ -1,44 +1,25 @@
 package com.vamshi.springopenai.service;
 
-import org.springframework.ai.chat.client.ChatClient;
+import com.vamshi.springopenai.common.ModelType;
+import com.vamshi.springopenai.config.ChatClientRouter;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MultiModelChatModel {
 
-    private final ChatClient openAiChatClient;
-    private final ChatClient ollamaAiChatClient;
+    private final ChatClientRouter router;
 
-    public MultiModelChatModel(ChatClient openAiChatClient, ChatClient ollamaAiChatClient) {
-        this.openAiChatClient = openAiChatClient;
-        this.ollamaAiChatClient = ollamaAiChatClient;
+    public MultiModelChatModel(ChatClientRouter router) {
+        this.router = router;
     }
-    public String chat(String message, String provider) {
 
+    public String chat(String message, ModelType modelType) {
         if (message == null || message.isBlank()) {
             throw new IllegalArgumentException("Prompt must not be empty");
         }
-
-        return switch (provider.toLowerCase()) {
-            case "openai" ->
-                    openAiChatModel(message);
-
-            case "ollama" ->
-                    ollamaAiChatClient(message);
-
-            default ->
-                     "Unsupported provider: " + provider;
-        };
-    }
-
-    private String openAiChatModel(String message){
-        return openAiChatClient.prompt()
-                .call()
-                .content();
-    }
-
-    private String ollamaAiChatClient(String message){
-        return ollamaAiChatClient.prompt()
+        return router.getClient(modelType)
+                .prompt()
+                .user(message)
                 .call()
                 .content();
     }
