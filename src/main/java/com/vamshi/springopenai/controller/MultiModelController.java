@@ -14,7 +14,7 @@ public class MultiModelController {
         this.multiModelChatModel = multiModelChatModel;
     }
 
-    @PostMapping("/chat/{model}")
+    @PostMapping("/chat")
     public String multiModel(@RequestHeader("X-Chat-Model") ModelType model, @RequestBody ChatRequest chatRequest) {
         return multiModelChatModel.chat(chatRequest.getMessage(), model);
     }
