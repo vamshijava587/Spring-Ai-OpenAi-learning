@@ -2,7 +2,9 @@ package com.vamshi.springopenai.config;
 
 import com.vamshi.springopenai.common.ModelType;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class ChatClientRouter {
@@ -10,7 +12,9 @@ public class ChatClientRouter {
     private final ChatClient openAiChatClient;
     private final ChatClient ollamaAiChatClient;
 
-    public ChatClientRouter(ChatClient openAiChatClient, ChatClient ollamaAiChatClient) {
+    public ChatClientRouter(
+            @Qualifier("openAiChatClient") ChatClient openAiChatClient,
+            @Qualifier("ollamaAiChatClient") ChatClient ollamaAiChatClient) {
         this.openAiChatClient = openAiChatClient;
         this.ollamaAiChatClient = ollamaAiChatClient;
     }
