@@ -2,6 +2,7 @@ package com.vamshi.springopenai.common;
 
 public enum ModuleType {
     MEDICAL("medical"),
+    NDC("ndc"),
     SYMPTOM_CHECKER("symptom_checker"),
     DIET_NUTRITION("diet_nutrition"),
     MENTAL_HEALTH("mental_health"),

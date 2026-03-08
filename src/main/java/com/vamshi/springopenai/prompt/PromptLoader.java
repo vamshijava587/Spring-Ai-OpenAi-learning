@@ -4,6 +4,7 @@ import com.vamshi.springopenai.common.ModuleType;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,9 @@ public class PromptLoader {
     // ConcurrentHashMap for thread-safe hot reload
     private final ConcurrentHashMap<ModuleType, String> promptCache = new ConcurrentHashMap<>();
 
+    @Value("${prompts.reload.enabled:false}")
+    private boolean reloadEnabled;
+
     @PostConstruct
     public void loadAll() {
         for (ModuleType module : ModuleType.values()) {
@@ -32,6 +36,12 @@ public class PromptLoader {
     // Hot reload every 60 seconds
     @Scheduled(fixedDelayString = "${prompts.reload.interval-ms:60000}")
     public void reloadAll() {
+
+        if (!reloadEnabled) {
+            log.debug("Prompt reload is disabled via properties.");
+            return;
+        }
+
         log.info("Hot reloading prompts...");
         for (ModuleType module : ModuleType.values()) {
             loadPrompt(module);
