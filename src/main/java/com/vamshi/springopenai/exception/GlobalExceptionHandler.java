@@ -7,15 +7,23 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleBadModelType(MethodArgumentTypeMismatchException ex) {
+    public ResponseEntity<String> handleBadEnum(MethodArgumentTypeMismatchException ex) {
         return ResponseEntity.badRequest()
-                .body("Invalid model type. Accepted values: OPENAI, OLLAMA");
+                .body("Invalid value: '" + ex.getValue() +
+                        "'. Accepted models: OPENAI, OLLAMA. " +
+                        "Accepted modules: MEDICAL, SYMPTOM_CHECKER, DIET_NUTRITION, " +
+                        "MENTAL_HEALTH, LEGAL, FINANCE, GENERAL");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArg(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneral(Exception ex) {
+        return ResponseEntity.internalServerError()
+                .body("Something went wrong. Please try again.");
     }
 }
