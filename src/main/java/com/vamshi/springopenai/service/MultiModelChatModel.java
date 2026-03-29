@@ -9,6 +9,8 @@ import reactor.core.publisher.Flux;
 
 import java.util.UUID;
 
+import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
+
 @Service
 public class MultiModelChatModel {
 
@@ -37,7 +39,7 @@ public class MultiModelChatModel {
                 .system(systemPrompt)
                 .user(message)
                 .advisors(advisor ->
-                        advisor.param("chat_memory_conversation_id", resolvedId))
+                        advisor.param(CONVERSATION_ID, resolvedId))
                 .call()
                 .content();
     }

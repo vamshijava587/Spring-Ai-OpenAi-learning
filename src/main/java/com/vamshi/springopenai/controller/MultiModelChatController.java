@@ -31,12 +31,12 @@ public class MultiModelChatController {
     }
 
     // ADD this endpoint alongside existing /chat
-    @GetMapping(value = "/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> stream(
             @RequestHeader("X-Chat-Model") ModelType model,
             @RequestHeader("X-Chat-Module") ModuleType module,
             @RequestHeader(value = "X-Session-Id", required = false) String sessionId,
-            @RequestParam String message) {       // GET with query param for SSE
-        return multiModelChatModel.stream(message, model, module, sessionId);
+            @RequestBody ChatRequest request) {
+        return multiModelChatModel.stream(request.getMessage(), model, module, sessionId);
     }
 }

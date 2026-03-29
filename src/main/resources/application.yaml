@@ -4,16 +4,45 @@ spring:
       base-url: http://localhost:11434/
       chat:
         options:
-          model: llama3.2:1b
+          model: llama3.2
+          temperature: 0.3
+          num-predict: 1024
+      embedding:
+        options:
+          model: nomic-embed-text        # for RAG embeddings
     openai:
       api-key: ${OPENAI_API_KEY}
       chat:
         options:
           model: gpt-4o-mini
+          temperature: 0.3
+          max-tokens: 1024
     observability:
       enabled: true
+    chat:
+      memory:
+        jdbc:
+          enabled: true
+          initialize-schema: true
+
+    # Qdrant vector store
+    vectorstore:
+      qdrant:
+        host: localhost
+        port: 6334
+        collection-name: medical_docs
+        initialize-schema: true          # Spring AI creates the collection
+
+  # PostgreSQL
+  datasource:
+    url: jdbc:mysql://localhost:3306/medical_ai
+    username: medai
+    password: medai2025
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
 server:
   port: 8082
+
 management:
   endpoints:
     web:
@@ -22,8 +51,12 @@ management:
   tracing:
     enabled: true
 
+prompts:
+  reload:
+    enabled: true
+    interval-ms: 60000
+
 logging:
   level:
-    io.micrometer: DEBUG
-    org.springframework.web.client: DEBUG
-    org.springframework.web.reactive.function.client: DEBUG
+    org.springframework: DEBUG
+    com.vamshi.springopenai: DEBUG
